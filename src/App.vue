@@ -5,9 +5,13 @@
 
   import { ref } from "vue";
 
+  // Sert à montrer/cacher le bouton Ajouter et le formulaire
   let seen = ref(true);
   let reload = ref(false);
 
+  /**
+   * Après l'ajout d'un médicament, on recharge la liste des médicaments, on cache le formulaire et on réaffiche le bouton Ajouter
+   */
   function loadAndHide()
   {
     reload.value = !reload.value;

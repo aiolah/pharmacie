@@ -7,6 +7,9 @@
     const form = ref('');
     const quantity = ref(1);
 
+    /**
+     * Ajoute un médicament dans l'API
+     */
     function addMedicine()
     {
         let myHeaders = new Headers();
@@ -32,6 +35,7 @@
         .then((dataJSON) => {
             console.log(dataJSON);
 
+            // Évènement qui remonte vers App pour dire à ArrayMedicine de recharger la liste des médicaments
             emit("loadNewMedicine");
         })
         .catch((error) => {

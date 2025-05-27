@@ -16,6 +16,9 @@
         getAllMedicine();
     });
 
+    /**
+     * Récupère la liste de tous les médicaments
+     */
     function getAllMedicine()
     {
         const fetchOptions = { method: "GET" };
@@ -61,6 +64,10 @@
         ajaxChangeQuantity(medicine);
     }
 
+    /**
+     * Effectue une requête AJAX pour changer la quantité d'un médicament
+     * @param medicine Objet représentant un médicament
+     */
     function ajaxChangeQuantity(medicine)
     {
         let myHeaders = new Headers();
@@ -84,6 +91,10 @@
         });
     }
 
+    /**
+     * Suppression d'un médicament
+     * @param index Index du médicament à supprimer
+     */
     function deleteMedicine(index)
     {
         let medicine = listMedicine[index];
