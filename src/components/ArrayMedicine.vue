@@ -103,8 +103,7 @@
         .then((dataJSON) => {
             console.log(dataJSON);
 
-            listMedicine.length = 0;
-            getAllMedicine();
+            listMedicine.splice(index, 1);
         })
         .catch((error) => {
             console.log(error);
