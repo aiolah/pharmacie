@@ -6,6 +6,7 @@
     const name = ref('');
     const form = ref('');
     const quantity = ref(1);
+    const photo = ref(''); // --> variable qui va contenir le fichier en base64
 
     /**
      * Ajoute un médicament dans l'API
@@ -22,7 +23,8 @@
             body: JSON.stringify({
                 denomination: name.value,
                 formepharmaceutique: form.value,
-                qte: quantity.value
+                qte: quantity.value,
+                photo: photo.value
             })
         };
 
@@ -41,6 +43,21 @@
         .catch((error) => {
             console.log(error);
         });
+    }
+
+    /**
+     * Convertit le fichier en base64 dès qu'il est inséré dans le champ
+     */
+    function handleFileUpload()
+    {
+        const file = document.querySelector("#img").files[0];
+        if (!file) return; // Si l'utilisateur annule la sélection du fichier, on ne fait rien
+        // FileReader est un objet JavaScript permettant de lire le contenu d'un fichier de manière asynchrone
+        const reader = new FileReader(); 
+        reader.onload = () => { // definir le traitement asynchrone du contenu du fichier
+            photo.value = reader.result // --> convertit le contenu du fichier en base64
+        };
+        reader.readAsDataURL(file); // lance la lecture du fichier et donc la conversion en base64
     }
 </script>
 
@@ -79,6 +96,11 @@
                     <span class="input-group-text">Quantité</span>
                     <input type="number" class="form-control" min="1" v-model="quantity" required>
                 </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <input class="form-control" type="file" id="img" @change="handleFileUpload">
             </div>
         </div>
         <input type="submit" class="btn btn-primary me-2" value="Enregistrer">
