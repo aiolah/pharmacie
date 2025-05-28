@@ -1,6 +1,10 @@
 <script setup>
+    import { ref } from "vue";
+
     const props = defineProps(["medicine"]);
     const emit = defineEmits(["goBack", "reloadListMedicine"]);
+
+    const photo = ref('');
 
     /**
      * Modifie un médicament existant dans l'API
@@ -15,10 +19,16 @@
         const fetchOptions = {
             method: "PUT",
             headers: myHeaders,
-            body: JSON.stringify(props.medicine)
+            body: JSON.stringify({
+                id: props.medicine.id,
+                denomination: props.medicine.denomination,
+                formepharmaceutique: props.medicine.formepharmaceutique,
+                qte: props.medicine.qte,
+                photo: photo.value
+            })
         };
 
-        console.log(fetchOptions.body);
+        // console.log(fetchOptions.body);
 
         fetch(url, fetchOptions)
         .then((response) => {
@@ -33,6 +43,21 @@
         .catch((error) => {
             console.log(error);
         });
+    }
+
+    /**
+     * Convertit le fichier en base64 dès qu'il est inséré dans le champ
+     */
+    function handleFileUpload()
+    {
+        const file = document.querySelector("#img").files[0];
+        if (!file) return; // Si l'utilisateur annule la sélection du fichier, on ne fait rien
+        // FileReader est un objet JavaScript permettant de lire le contenu d'un fichier de manière asynchrone
+        const reader = new FileReader(); 
+        reader.onload = () => { // definir le traitement asynchrone du contenu du fichier
+            photo.value = reader.result // --> convertit le contenu du fichier en base64
+        };
+        reader.readAsDataURL(file); // lance la lecture du fichier et donc la conversion en base64
     }
 </script>
 
@@ -57,6 +82,11 @@
                     <span class="input-group-text">Quantité</span>
                     <input type="number" class="form-control" min="1" v-model="props.medicine.qte" required>
                 </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <input class="form-control" type="file" id="img" @change="handleFileUpload">
             </div>
         </div>
         <input type="submit" class="btn btn-primary me-2" value="Modifier">
