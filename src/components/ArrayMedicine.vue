@@ -2,16 +2,17 @@
     import { reactive, onMounted, watch } from "vue";
 
     const listMedicine = reactive([]);
-    const props = defineProps(["reload"]);
+    const props = defineProps(["reload", "disabled"]);
+    const emit = defineEmits(["updateMedicine"]);
 
-    let url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
+    const url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
 
     onMounted(() => {
         getAllMedicine();
     });
 
     watch(props, (reload) => {
-        console.log(reload);
+        // console.log(reload);
         listMedicine.length = 0;
         getAllMedicine();
     });
@@ -142,7 +143,7 @@
                 <td class="actions">
                     <button type="button" class="btn btn-primary btn-sm" @click="addOneQuantity(index)">+ 1</button>
                     <button type="button" class="btn btn-info btn-sm" @click="lessOneQuantity(index)">- 1</button>
-                    <button type="button" class="btn btn-warning btn-sm" @click=""><font-awesome-icon icon="pen-to-square" /></button>
+                    <button type="button" class="btn btn-warning btn-sm" @click="$emit('updateMedicine', medicine)" :disabled="props.disabled"><font-awesome-icon icon="pen-to-square" /></button>
                     <button type="button" class="btn btn-danger btn-sm" @click="deleteMedicine(index)"><font-awesome-icon icon="trash"/></button>
                 </td>
             </tr>
