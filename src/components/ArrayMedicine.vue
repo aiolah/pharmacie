@@ -1,8 +1,9 @@
 <script setup>
-    import { reactive, onMounted, watch } from "vue";
+    import { ref, onMounted, watch } from "vue";
+    import defaultBoite from "@/assets/boite-default.png";
 
-    const listMedicine = reactive([]);
-    const props = defineProps(["reload", "disabled"]);
+    const listMedicine = ref([]);
+    const props = defineProps(["reload", "disabled", "searchItem"]);
     const emit = defineEmits(["updateMedicine"]);
 
     const url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
@@ -11,10 +12,13 @@
         getAllMedicine();
     });
 
-    watch(props, (reload) => {
-        // console.log(reload);
-        listMedicine.length = 0;
+    watch(() => props.reload, (newValue, oldValue) => {
+        listMedicine.value.length = 0;
         getAllMedicine();
+    });
+
+    watch(() => props.searchItem, (newValue, oldValue) => {
+        getSearchedMedicine();
     });
 
     /**
@@ -34,7 +38,8 @@
             let allMedicine = dataJSON;
     
             allMedicine.forEach((medicine) => {
-                listMedicine.push(medicine);
+                getPhotoUrl(medicine);
+                listMedicine.value.push(medicine);
             });
         })
         .catch((error) => {
@@ -48,7 +53,7 @@
      */
     function addOneQuantity(index)
     {
-        let medicine = listMedicine[index];
+        let medicine = listMedicine.value[index];
         medicine.qte++;
 
         ajaxChangeQuantity(medicine);
@@ -60,9 +65,18 @@
      */
     function lessOneQuantity(index)
     {
-        let medicine = listMedicine[index];
-        medicine.qte--;
-        ajaxChangeQuantity(medicine);
+        let medicine = listMedicine.value[index];
+
+        if(medicine.qte >= 1)
+        {
+            medicine.qte--;
+            ajaxChangeQuantity(medicine);
+        }
+        else
+        {
+            alert("L'opération est impossible");
+        }
+
     }
 
     /**
@@ -77,7 +91,10 @@
         const fetchOptions = {
             method: "PUT",
             headers: myHeaders,
-            body: JSON.stringify(medicine)
+            body: JSON.stringify({
+                id: medicine.id,
+                qte: medicine.qte
+            })
         };
 
         fetch(url, fetchOptions)
@@ -98,7 +115,7 @@
      */
     function deleteMedicine(index)
     {
-        let medicine = listMedicine[index];
+        let medicine = listMedicine.value[index];
         let idMedicine = medicine.id;
 
         console.log(idMedicine);
@@ -115,11 +132,59 @@
         .then((dataJSON) => {
             console.log(dataJSON);
 
-            listMedicine.splice(index, 1);
+            listMedicine.value.splice(index, 1);
         })
         .catch((error) => {
             console.log(error);
         });
+    }
+
+    /**
+     * Effectue une recherche parmi les médicaments existants
+     */
+    function getSearchedMedicine()
+    {       
+        const searchUrl = url + `?search=${props.searchItem}`;
+        const fetchOptions = {
+            method: "GET",
+        };
+
+        console.log(searchUrl);
+
+        fetch(searchUrl, fetchOptions)
+        .then((response) => {
+            return response.json();
+        })
+        .then((dataJSON) => {
+            console.log(dataJSON);
+
+            dataJSON.forEach((medicine) => {
+                getPhotoUrl(medicine);
+            });
+
+            listMedicine.value = dataJSON;
+
+            console.log(listMedicine.value);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    /**
+     * Récupère l'URL de l'image ou l'image par défaut du médicament
+     * @param medicine Objet médicament
+     */
+    function getPhotoUrl(medicine)
+    {
+        if(medicine.photo == null)
+        {
+            medicine.photo = defaultBoite;
+        }
+        else
+        {
+            medicine.photo = `https://apipharmacie.pecatte.fr/images/${medicine.photo}`;
+        }
     }
 </script>
 
@@ -138,7 +203,7 @@
             <tr v-for="(medicine, index) in listMedicine" :key="medicine.id">
                 <td>{{ medicine.denomination }}</td>
                 <td>{{ medicine.formepharmaceutique}}</td>
-                <td><img :src="'https://apipharmacie.pecatte.fr/images/' + medicine.photo"></td>
+                <td><img :src="medicine.photo"></td>
                 <td>{{ medicine.qte }}</td>
                 <td class="actions">
                     <button type="button" class="btn btn-primary btn-sm" @click="addOneQuantity(index)">+ 1</button>

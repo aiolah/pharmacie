@@ -1,5 +1,6 @@
 <script setup>
   import ButtonAddMedicine from "./components/ButtonAddMedicine.vue";
+  import SearchBar from "./components/SearchBar.vue";
   import FormNewMedicine from "./components/FormNewMedicine.vue";
   import ArrayMedicine from "./components/ArrayMedicine.vue";
   import FormUpdateMedicine from "./components/FormUpdateMedicine.vue";
@@ -8,18 +9,21 @@
 
   // Sert à montrer/cacher le bouton Ajouter et le formulaire
   let seen = ref(true);
-  let reload = ref(false);
+  let reload = ref(0);
   let medicine = ref({ });
   let showUpdateForm = ref(false);
   let disabled = ref(false);
+  let searchItem = ref('');
+  let emptySearchBar = ref(false);
 
   /**
    * Après l'ajout d'un médicament, on recharge la liste des médicaments, on cache le formulaire et on réaffiche le bouton Ajouter
    */
   function loadAndHide()
   {
-    reload.value = !reload.value;
+    reload.value++;
     seen.value = !seen.value;
+    emptySearchBar.value = true;
   }
 
   /**
@@ -47,9 +51,27 @@
    */
   function reloadAfterUpdate()
   {
-    reload.value = true;
+    reload.value++;
     disabled.value = false;
     showUpdateForm.value = !showUpdateForm.value;
+    emptySearchBar.value = true;
+  }
+
+  /**
+   * Transfert de searchInput de la SearchBar à ArrayMedicine
+   * @param searchItemInput Chaîne entrée par l'utilisateur dans la barre de recherche
+   */
+  function filterMedicine(searchItemInput)
+  {
+    searchItem.value = searchItemInput;
+  }
+
+  /**
+   * Reload de la page après une recherche
+   */
+  function reloadAfterSearch()
+  {
+    reload.value++;
   }
 </script>
 
@@ -61,9 +83,14 @@
     <div class="container">
       <h1 class="text-center m-3">Ma Pharmacie</h1>
 
-      <ButtonAddMedicine v-if="seen" @click="seen = !seen"></ButtonAddMedicine>
+      <div class="d-flex justify-content-between">
+        <ButtonAddMedicine v-if="seen" @click="seen = !seen"></ButtonAddMedicine>
+        <div class="col-3">
+          <SearchBar :emptySearchBar="emptySearchBar" v-if="seen" @searchMedicine="filterMedicine" @reloadAfterSearch="reloadAfterSearch"></SearchBar>
+        </div>
+      </div>
       <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide"></FormNewMedicine>
-      <ArrayMedicine :reload="reload" :disabled="disabled" @updateMedicine="sendDataToForm"></ArrayMedicine>
+      <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm"></ArrayMedicine>
       <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideFormAndAutorizeEdit" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
     </div>
   </main>
