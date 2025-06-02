@@ -4,6 +4,7 @@
   import FormNewMedicine from "./components/FormNewMedicine.vue";
   import ArrayMedicine from "./components/ArrayMedicine.vue";
   import FormUpdateMedicine from "./components/FormUpdateMedicine.vue";
+  import AlertSuccess from "./components/AlertSuccess.vue";
 
   import { ref } from "vue";
 
@@ -15,6 +16,8 @@
   let disabled = ref(false);
   let searchItem = ref('');
   let emptySearchBar = ref(false);
+  let msg = ref('');
+  let showAlert = ref(false);
 
   /**
    * Après l'ajout d'un médicament, on recharge la liste des médicaments, on cache le formulaire et on réaffiche le bouton Ajouter
@@ -25,13 +28,8 @@
     seen.value = !seen.value;
     emptySearchBar.value = true;
 
-    const div = document.querySelector("#alert-add-success");
-    div.innerHTML = "<div class='alert alert-success alert-dismissible fade show' role='alert'>"
-                    + "<font-awesome-icon icon='circle-check' />"
-                    // + "<!-- <font-awesome-icon icon='check' /> -->";
-                    + "&nbsp; Le médicament a été ajouté avec succès !"
-                    + "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>"
-                    + "</div>";
+    msg.value = "Le médicament a été ajouté avec succès !";
+    showAlert.value = true;
   }
 
   /**
@@ -63,6 +61,9 @@
     disabled.value = false;
     showUpdateForm.value = !showUpdateForm.value;
     emptySearchBar.value = true;
+
+    msg.value = "Le médicament a bien été modifié !";
+    showAlert.value = true;
   }
 
   /**
@@ -81,6 +82,17 @@
   {
     reload.value++;
   }
+
+  function showDeleteMessage()
+  {
+    msg.value = "Le médicament a bien été supprimé !";
+    showAlert.value = true;
+  }
+
+  function closeAlert()
+  {
+    showAlert.value = false;
+  }
 </script>
 
 <template>
@@ -91,7 +103,7 @@
     <div class="container">
       <h1 class="text-center m-3">Ma Pharmacie</h1>
 
-      <div id="alert-add-success"></div>  
+      <AlertSuccess v-if="showAlert" :msg="msg" @closeAlert="closeAlert"></AlertSuccess>
 
       <div class="d-flex justify-content-between">
         <ButtonAddMedicine v-if="seen" @click="seen = !seen"></ButtonAddMedicine>
@@ -100,7 +112,7 @@
         </div>
       </div>
       <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide"></FormNewMedicine>
-      <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm"></ArrayMedicine>
+      <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showDeleteMessage"></ArrayMedicine>
       <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideFormAndAutorizeEdit" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
     </div>
   </main>

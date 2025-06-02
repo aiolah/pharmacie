@@ -4,7 +4,7 @@
 
     const listMedicine = ref([]);
     const props = defineProps(["reload", "disabled", "searchItem"]);
-    const emit = defineEmits(["updateMedicine"]);
+    const emit = defineEmits(["updateMedicine", 'showDeleteSuccessAlert']);
 
     const url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
 
@@ -34,13 +34,18 @@
         })
         .then((dataJSON) => {
             console.log(dataJSON);
-    
+
+            listMedicine.value.length = 0;
+
             let allMedicine = dataJSON;
     
             allMedicine.forEach((medicine) => {
                 getPhotoUrl(medicine);
                 listMedicine.value.push(medicine);
             });
+
+            // Scroll en haut de la page après affichage des médicaments
+            window.scrollTo(0, 0);
         })
         .catch((error) => {
             console.log(error);
@@ -132,7 +137,9 @@
         .then((dataJSON) => {
             console.log(dataJSON);
 
-            listMedicine.value.splice(index, 1);
+            emit("showDeleteSuccessAlert");
+
+            getAllMedicine();
         })
         .catch((error) => {
             console.log(error);
