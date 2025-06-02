@@ -24,6 +24,14 @@
     reload.value++;
     seen.value = !seen.value;
     emptySearchBar.value = true;
+
+    const div = document.querySelector("#alert-add-success");
+    div.innerHTML = "<div class='alert alert-success alert-dismissible fade show' role='alert'>"
+                    + "<font-awesome-icon icon='circle-check' />"
+                    // + "<!-- <font-awesome-icon icon='check' /> -->";
+                    + "&nbsp; Le médicament a été ajouté avec succès !"
+                    + "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>"
+                    + "</div>";
   }
 
   /**
@@ -82,6 +90,8 @@
   <main>
     <div class="container">
       <h1 class="text-center m-3">Ma Pharmacie</h1>
+
+      <div id="alert-add-success"></div>  
 
       <div class="d-flex justify-content-between">
         <ButtonAddMedicine v-if="seen" @click="seen = !seen"></ButtonAddMedicine>
