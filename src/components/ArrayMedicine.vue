@@ -1,6 +1,6 @@
 <script setup>
     import { ref, onMounted, watch } from "vue";
-    import defaultBoite from "@/assets/boite-default.png";
+    import Medicine from "../Medicine.js";
 
     const listMedicine = ref([]);
     const props = defineProps(["reload", "disabled", "searchItem"]);
@@ -40,8 +40,7 @@
             let allMedicine = dataJSON;
     
             allMedicine.forEach((medicine) => {
-                getPhotoUrl(medicine);
-                listMedicine.value.push(medicine);
+                listMedicine.value.push(new Medicine(medicine));
             });
 
             // Scroll en haut de la page après affichage des médicaments
@@ -59,7 +58,7 @@
     function addOneQuantity(index)
     {
         let medicine = listMedicine.value[index];
-        medicine.qte++;
+        medicine.addQte();
 
         ajaxChangeQuantity(medicine);
     }
@@ -74,7 +73,7 @@
 
         if(medicine.qte >= 1)
         {
-            medicine.qte--;
+            medicine.reduceQte();
             ajaxChangeQuantity(medicine);
         }
         else
@@ -165,33 +164,19 @@
         .then((dataJSON) => {
             console.log(dataJSON);
 
+            let listSearchedMedicine = [];
+
             dataJSON.forEach((medicine) => {
-                getPhotoUrl(medicine);
+                listSearchedMedicine.push(new Medicine(medicine));
             });
 
-            listMedicine.value = dataJSON;
+            listMedicine.value = listSearchedMedicine;
 
             console.log(listMedicine.value);
         })
         .catch((error) => {
             console.log(error);
         });
-    }
-
-    /**
-     * Récupère l'URL de l'image ou l'image par défaut du médicament
-     * @param medicine Objet médicament
-     */
-    function getPhotoUrl(medicine)
-    {
-        if(medicine.photo == null)
-        {
-            medicine.photo = defaultBoite;
-        }
-        else
-        {
-            medicine.photo = `https://apipharmacie.pecatte.fr/images/${medicine.photo}`;
-        }
     }
 </script>
 
@@ -209,7 +194,7 @@
         <tbody>
             <tr v-for="(medicine, index) in listMedicine" :key="medicine.id">
                 <td>{{ medicine.denomination }}</td>
-                <td>{{ medicine.formepharmaceutique}}</td>
+                <td>{{ medicine.formepharmaceutique }}</td>
                 <td><img :src="medicine.photo"></td>
                 <td>{{ medicine.qte }}</td>
                 <td class="actions">

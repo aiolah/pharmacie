@@ -6,8 +6,7 @@
 
     watch(() => props.msg, (oldValue, newValue) => {
 
-    },
-    { immediate: true });
+    });
 
     function closeAlert()
     {
