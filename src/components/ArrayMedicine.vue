@@ -33,8 +33,6 @@
             return response.json();
         })
         .then((dataJSON) => {
-            console.log(dataJSON);
-
             listMedicine.value.length = 0;
 
             let allMedicine = dataJSON;
@@ -106,7 +104,7 @@
             return response.json();
         })
         .then((dataJSON) => {
-            console.log(dataJSON);
+            // console.log(dataJSON);
         })
         .catch((error) => {
             console.log(error);
@@ -122,8 +120,6 @@
         let medicine = listMedicine.value[index];
         let idMedicine = medicine.id;
 
-        console.log(idMedicine);
-
         const deleteUrl = url + `/${idMedicine}`;
         const fetchOptions = {
             method: "DELETE",
@@ -134,8 +130,6 @@
             return response.json();
         })
         .then((dataJSON) => {
-            console.log(dataJSON);
-
             emit("showDeleteSuccessAlert");
 
             getAllMedicine();
@@ -155,15 +149,11 @@
             method: "GET",
         };
 
-        console.log(searchUrl);
-
         fetch(searchUrl, fetchOptions)
         .then((response) => {
             return response.json();
         })
         .then((dataJSON) => {
-            console.log(dataJSON);
-
             let listSearchedMedicine = [];
 
             dataJSON.forEach((medicine) => {
@@ -171,8 +161,6 @@
             });
 
             listMedicine.value = listSearchedMedicine;
-
-            console.log(listMedicine.value);
         })
         .catch((error) => {
             console.log(error);

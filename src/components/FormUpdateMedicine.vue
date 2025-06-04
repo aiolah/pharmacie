@@ -28,15 +28,11 @@
             })
         };
 
-        // console.log(fetchOptions.body);
-
         fetch(url, fetchOptions)
         .then((response) => {
             return response.json();
         })
         .then((dataJSON) => {
-            console.log(dataJSON);
-
             // Pour recharger la page avec les modifications apportées
             emit("reloadListMedicine");
         })

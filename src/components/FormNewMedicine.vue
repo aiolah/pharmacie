@@ -35,8 +35,6 @@
             return response.json();
         })
         .then((dataJSON) => {
-            console.log(dataJSON);
-
             // Évènement qui remonte vers App pour dire à ArrayMedicine de recharger la liste des médicaments
             emit("loadNewMedicine");
         })
