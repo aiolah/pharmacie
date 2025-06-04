@@ -5,6 +5,7 @@
   import ArrayMedicine from "./components/ArrayMedicine.vue";
   import FormUpdateMedicine from "./components/FormUpdateMedicine.vue";
   import AlertSuccess from "./components/AlertSuccess.vue";
+  import AlertError from "./components/AlertError.vue";
 
   import { ref } from "vue";
 
@@ -16,8 +17,10 @@
   let disabled = ref(false);
   let searchItem = ref('');
   let emptySearchBar = ref(false);
-  let msg = ref('');
-  let showAlert = ref(false);
+  let msgSuccess = ref('');
+  let showAlertSuccess = ref(false);
+  let msgError = ref('');
+  let showAlertError = ref(false);
 
   /**
    * Après l'ajout d'un médicament, on recharge la liste des médicaments, on cache le formulaire et on réaffiche le bouton Ajouter
@@ -28,8 +31,9 @@
     seen.value = !seen.value;
     emptySearchBar.value = true;
 
-    msg.value = "Le médicament a été ajouté avec succès !";
-    showAlert.value = true;
+    msgSuccess.value = "Le médicament a été ajouté avec succès !";
+    showAlertSuccess.value = true;
+    showAlertError.value = false;
   }
 
   /**
@@ -62,8 +66,8 @@
     showUpdateForm.value = !showUpdateForm.value;
     emptySearchBar.value = true;
 
-    msg.value = "Le médicament a bien été modifié !";
-    showAlert.value = true;
+    msgSuccess.value = "Le médicament a bien été modifié !";
+    showAlertSuccess.value = true;
   }
 
   /**
@@ -73,6 +77,7 @@
   function filterMedicine(searchItemInput)
   {
     searchItem.value = searchItemInput;
+    showAlertError.value = false;
   }
 
   /**
@@ -81,17 +86,29 @@
   function reloadAfterSearch()
   {
     reload.value++;
+    showAlertError.value = false;
   }
 
   function showDeleteMessage()
   {
     msg.value = "Le médicament a bien été supprimé !";
-    showAlert.value = true;
+    showAlertSuccess.value = true;
   }
 
-  function closeAlert()
+  function closeAlertSuccess()
   {
-    showAlert.value = false;
+    showAlertSuccess.value = false;
+  }
+
+  function showErrorAlert(nameExistingMedicine)
+  {
+    showAlertError.value = true;
+    msgError.value = `Le médicament <strong>${nameExistingMedicine}</strong> existe déjà ! <br> Veuillez modifier le médicament existant ou changer le nom du nouveau médicament.`;
+  }
+
+  function closeAlertError()
+  {
+    showAlertError.value = false;
   }
 </script>
 
@@ -103,7 +120,8 @@
     <div class="container">
       <h1 class="text-center m-3">Ma Pharmacie</h1>
 
-      <AlertSuccess v-if="showAlert" :msg="msg" @closeAlert="closeAlert"></AlertSuccess>
+      <AlertSuccess v-if="showAlertSuccess" :msg="msgSuccess" @closeAlert="closeAlertSuccess"></AlertSuccess>
+      <AlertError v-if="showAlertError" :msg="msgError" @closeAlert="closeAlertError"></AlertError>
 
       <div class="d-flex justify-content-between">
         <ButtonAddMedicine v-if="seen" @click="seen = !seen"></ButtonAddMedicine>
@@ -111,7 +129,7 @@
           <SearchBar :emptySearchBar="emptySearchBar" v-if="seen" @searchMedicine="filterMedicine" @reloadAfterSearch="reloadAfterSearch"></SearchBar>
         </div>
       </div>
-      <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide"></FormNewMedicine>
+      <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide" @showErrorAlert="showErrorAlert"></FormNewMedicine>
       <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showDeleteMessage"></ArrayMedicine>
       <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideFormAndAutorizeEdit" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
     </div>

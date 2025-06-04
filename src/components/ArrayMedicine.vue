@@ -181,7 +181,7 @@
         </thead>
         <tbody>
             <tr v-for="(medicine, index) in listMedicine" :key="medicine.id">
-                <td>{{ medicine.denomination }}</td>
+                <td :id="'medicine-' + medicine.denomination">{{ medicine.denomination }}</td>
                 <td>{{ medicine.formepharmaceutique }}</td>
                 <td><img :src="medicine.photo"></td>
                 <td>{{ medicine.qte }}</td>

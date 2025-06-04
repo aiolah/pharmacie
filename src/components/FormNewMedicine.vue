@@ -1,7 +1,7 @@
 <script setup>
     import { ref } from "vue";
 
-    const emit = defineEmits(["goBack", "loadNewMedicine"]);
+    const emit = defineEmits(["goBack", "loadNewMedicine", "showErrorAlert"]);
 
     const name = ref('');
     const form = ref('');
@@ -13,34 +13,40 @@
      */
     function addMedicine()
     {
-        let myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+        if(document.querySelector(`#medicine-${name.value}`))
+        {
+            emit("showErrorAlert", name.value);
+        }
+        else
+        {
 
-        let url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
-        const fetchOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: JSON.stringify({
-                denomination: name.value,
-                formepharmaceutique: form.value,
-                qte: quantity.value,
-                photo: photo.value
+            let myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+    
+            let url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
+            const fetchOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: JSON.stringify({
+                    denomination: name.value,
+                    formepharmaceutique: form.value,
+                    qte: quantity.value,
+                    photo: photo.value
+                })
+            };
+        
+            fetch(url, fetchOptions)
+            .then((response) => {
+                return response.json();
             })
-        };
-
-        // console.log(fetchOptions.body);
-
-        fetch(url, fetchOptions)
-        .then((response) => {
-            return response.json();
-        })
-        .then((dataJSON) => {
-            // Évènement qui remonte vers App pour dire à ArrayMedicine de recharger la liste des médicaments
-            emit("loadNewMedicine");
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+            .then((dataJSON) => {
+                // Évènement qui remonte vers App pour dire à ArrayMedicine de recharger la liste des médicaments
+                emit("loadNewMedicine");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
     }
 
     /**
