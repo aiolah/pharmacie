@@ -186,10 +186,10 @@
                 <td><img :src="medicine.photo"></td>
                 <td>{{ medicine.qte }}</td>
                 <td class="actions">
-                    <button type="button" class="btn btn-primary btn-sm" @click="addOneQuantity(index)">+ 1</button>
-                    <button type="button" class="btn btn-info btn-sm" @click="lessOneQuantity(index)">- 1</button>
-                    <button type="button" class="btn btn-warning btn-sm" @click="$emit('updateMedicine', medicine)" :disabled="props.disabled"><font-awesome-icon icon="pen-to-square" /></button>
-                    <button type="button" class="btn btn-danger btn-sm" @click="deleteMedicine(index)"><font-awesome-icon icon="trash"/></button>
+                    <button type="button" class="btn btn-primary btn-sm" title="Augmenter la quantité" @click="addOneQuantity(index)">+ 1</button>
+                    <button type="button" class="btn btn-info btn-sm" title="Réduire la quantité" @click="lessOneQuantity(index)">- 1</button>
+                    <button type="button" class="btn btn-warning btn-sm" :title="'Modifier le médicament ' + medicine.denomination" @click="$emit('updateMedicine', medicine)" :disabled="props.disabled"><font-awesome-icon icon="pen-to-square" /></button>
+                    <button type="button" class="btn btn-danger btn-sm" :title="'Supprimer le médicament ' + medicine.denomination" @click="deleteMedicine(index)"><font-awesome-icon icon="trash"/></button>
                 </td>
             </tr>
         </tbody>
