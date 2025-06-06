@@ -45,6 +45,9 @@
     medicine.value = medicineToUpdate;
     disabled.value = !disabled.value;
     showUpdateForm.value = !showUpdateForm.value;
+
+    // let height = document.body.scrollHeight + 184;
+    // window.scrollTo(0, height);
   }
 
   /**
