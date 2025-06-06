@@ -45,9 +45,6 @@
     medicine.value = medicineToUpdate;
     disabled.value = !disabled.value;
     showUpdateForm.value = !showUpdateForm.value;
-
-    // let height = document.body.scrollHeight + 184;
-    // window.scrollTo(0, height);
   }
 
   /**
@@ -135,6 +132,7 @@
       <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide" @showErrorAlert="showErrorAlert"></FormNewMedicine>
       <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showDeleteMessage"></ArrayMedicine>
       <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideFormAndAutorizeEdit" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
+      <div id="scroll-bottom"></div>
     </div>
   </main>
 </template>

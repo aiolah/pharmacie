@@ -1,14 +1,14 @@
 <script setup>
-    import { ref, watch } from "vue";
+    import { onMounted, ref } from "vue";
 
     const props = defineProps(["medicine"]);
     const emit = defineEmits(["goBack", "reloadListMedicine"]);
 
     const photo = ref('');
 
-    // watch(props, () => {
-    //     // document.querySelector("#form-update-medicine").scrollIntoView();
-    // });
+    onMounted(() => {
+        document.querySelector("#scroll-bottom").scrollIntoView();
+    });
 
     /**
      * Modifie un médicament existant dans l'API
@@ -62,36 +62,34 @@
 </script>
 
 <template>
-    <div id="form-update-medicine">
-        <h5>Modifier un médicament</h5>
-        <form action="" class="mb-3" @submit.prevent="updateMedicine">
-            <div class="row mb-2">
-                <div class="col-4">
-                    <div class="input-group">
-                        <span class="input-group-text">Nom</span>
-                        <input type="text" class="form-control" v-model="props.medicine.denomination" required>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="input-group">
-                        <span class="input-group-text">Forme</span>
-                        <input type="text" class="form-control" v-model="props.medicine.formepharmaceutique" required>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="input-group">
-                        <span class="input-group-text">Quantité</span>
-                        <input type="number" class="form-control" min="1" v-model="props.medicine.qte" required>
-                    </div>
+    <h5>Modifier un médicament</h5>
+    <form action="" class="mb-3" @submit.prevent="updateMedicine">
+        <div class="row mb-2">
+            <div class="col-4">
+                <div class="input-group">
+                    <span class="input-group-text">Nom</span>
+                    <input type="text" class="form-control" v-model="props.medicine.denomination" required>
                 </div>
             </div>
-            <div class="row mb-2">
-                <div class="col-12">
-                    <input class="form-control" type="file" id="img" @change="handleFileUpload">
+            <div class="col-4">
+                <div class="input-group">
+                    <span class="input-group-text">Forme</span>
+                    <input type="text" class="form-control" v-model="props.medicine.formepharmaceutique" required>
                 </div>
             </div>
-            <input type="submit" class="btn btn-primary me-2" value="Modifier">
-            <button type="button" class="btn btn-secondary" @click="$emit('goBack')">Annuler</button>
-        </form>
-    </div>
+            <div class="col-4">
+                <div class="input-group">
+                    <span class="input-group-text">Quantité</span>
+                    <input type="number" class="form-control" min="1" v-model="props.medicine.qte" required>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <input class="form-control" type="file" id="img" @change="handleFileUpload">
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary me-2" value="Modifier">
+        <button type="button" class="btn btn-secondary" @click="$emit('goBack')">Annuler</button>
+    </form>
 </template>
