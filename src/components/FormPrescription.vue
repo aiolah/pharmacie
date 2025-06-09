@@ -90,7 +90,7 @@
 
 <style scoped>
     section {
-        height: 70vh;
+        height: auto;
         color: black;
         padding: 2%;
         margin-bottom: 3vh;
@@ -155,7 +155,7 @@
     }
 
     #dose-inputs {
-        width: 42vw;
+        width: 50vw;
         height: 8vh;
     }
 
