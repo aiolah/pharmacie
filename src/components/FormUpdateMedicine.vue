@@ -6,6 +6,7 @@
 
     const photo = ref('');
 
+    // Au chargement du composant, on scrolle tout en bas de la page
     onMounted(() => {
         document.querySelector("#scroll-bottom").scrollIntoView();
     });
