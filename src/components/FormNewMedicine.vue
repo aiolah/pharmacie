@@ -13,11 +13,18 @@
      */
     function addMedicine()
     {
-        if(document.querySelector(`#medicine-${name.value}`))
-        {
-            emit("showErrorAlert", name.value);
-        }
-        else
+        let isMedicineDifferent = true;
+
+        let allMedicine = document.querySelectorAll(".name-medicine");
+        allMedicine.forEach((medicine) => {
+            if(medicine.textContent.trim().toLowerCase() == name.value.trim().toLowerCase())
+            {
+                emit("showErrorAlert", name.value);
+                isMedicineDifferent = false;
+            }
+        });
+
+        if(isMedicineDifferent)
         {
 
             let myHeaders = new Headers();
