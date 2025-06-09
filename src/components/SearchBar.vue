@@ -15,6 +15,9 @@
         }
     });
 
+    /**
+     * Si la searchBar contient du texte, on affiche l'icône croix pour clear la searchBar. Sinon, on n'affiche pas l'icône
+     */
     function handleCloseButton()
     {
         if(searchItemInput.value != "")
@@ -27,6 +30,9 @@
         }
     }
 
+    /**
+     * Fermeture de la recherche : on clear la searchBar et on n'affiche plus l'icône croix
+     */
     function closeSearch()
     {
         searchItemInput.value = "";

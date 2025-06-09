@@ -93,23 +93,36 @@
     showAlertError.value = false;
   }
 
+  /**
+   * Affichage d'une alerte après la suppression d'un médicament
+   */
   function showDeleteMessage()
   {
     msgSuccess.value = "Le médicament a bien été supprimé !";
     showAlertSuccess.value = true;
   }
 
+  /**
+   * Fermeture d'une alerte de succès
+   */
   function closeAlertSuccess()
   {
     showAlertSuccess.value = false;
   }
 
+  /**
+   * Affichage d'une alerte d'erreur lors de l'ajout d'un médicament existant
+   * @param nameExistingMedicine Nom du médicament qui existe déjà
+   */
   function showErrorAlert(nameExistingMedicine)
   {
     showAlertError.value = true;
     msgError.value = `Le médicament <strong>${nameExistingMedicine}</strong> existe déjà ! <br> Veuillez modifier le médicament existant ou changer le nom du nouveau médicament.`;
   }
 
+  /**
+   * Fermeture de l'alerte d'erreur
+   */
   function closeAlertError()
   {
     showAlertError.value = false;
