@@ -75,20 +75,6 @@
 <template>
     <h5>Ajouter un médicament</h5>
     <form action="" class="mb-3" @submit.prevent="addMedicine">
-        <!-- <div class="row">
-            <div class="col-5">
-                <label for="name" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="name">
-            </div>
-            <div class="col-5">
-                <label for="form" class="form-label">Forme pharmaceutique</label>
-                <input type="text" class="form-control" id="form">
-            </div>
-            <div class="col-2">
-                <label for="quantity" class="form-label">Quantité</label>
-                <input type="number" class="form-control" id="quantity" min="1">
-            </div>
-        </div> -->
         <div class="row mb-2">
             <div class="col-4">
                 <div class="input-group">
