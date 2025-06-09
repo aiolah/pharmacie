@@ -12,7 +12,7 @@
         ordo.value = JSON.parse(localStorage.getItem(`ordo-${props.medicine.id}`));
 
         // On affiche si le renouvellement est autorisé (si la checkbox était cochée)
-        (renewalOrNot.value) = ordo.renewal ? "Pas de renouvellement" : "Renouvellement autorisé";
+        (renewalOrNot.value) = ordo.value.renewal ? "Renouvellement autorisé" : "Pas de renouvellement";
 
         document.querySelector("#scroll-bottom").scrollIntoView();
     });
