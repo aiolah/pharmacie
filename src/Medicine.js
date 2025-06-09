@@ -7,6 +7,7 @@ class Medicine
     denomination;
     formepharmaceutique;
     qte;
+    ordo = false;
 
     constructor(medicine)
     {
@@ -18,6 +19,11 @@ class Medicine
         if(medicine.photo != null)
         {
             this.photo = `https://apipharmacie.pecatte.fr/images/${medicine.photo}`;
+        }
+
+        if(localStorage.getItem(`ordo-${medicine.id}`))
+        {
+            this.ordo = true;
         }
     }
 

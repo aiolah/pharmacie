@@ -6,6 +6,8 @@
   import FormUpdateMedicine from "./components/FormUpdateMedicine.vue";
   import AlertSuccess from "./components/AlertSuccess.vue";
   import AlertError from "./components/AlertError.vue";
+  import FormPrescription from "./components/FormPrescription.vue";
+  import SavedPrescription from "./components/SavedPrescription.vue";
 
   import { ref } from "vue";
 
@@ -21,6 +23,8 @@
   let showAlertSuccess = ref(false);
   let msgError = ref('');
   let showAlertError = ref(false);
+  let showPrescription = ref(false);
+  let showSavedPrescription = ref(false);
 
   /**
    * Après l'ajout d'un médicament, on recharge la liste des médicaments, on cache le formulaire et on réaffiche le bouton Ajouter
@@ -110,6 +114,65 @@
   {
     showAlertError.value = false;
   }
+
+  /**
+   * Affichage de l'ordonnance
+   * @param medicinePrescription Médicament dont on veut afficher l'ordonnance
+   */
+  function displayPrescription(medicinePrescription)
+  {
+    showPrescription.value = true;
+    medicine.value = medicinePrescription;
+  }
+
+  /**
+   * Fermeture de l'ordonnance
+   */
+  function closePrescription()
+  {
+    showPrescription.value = false;
+  }
+
+  /**
+   * Reload de la page après ajout de l'ordonnance
+   */
+  function reloadAfterPrescriptionAdded()
+  {
+    showPrescription.value = false;
+    reload.value++;
+
+    msgSuccess.value = "L'ordonnance a bien été ajoutée !";
+    showAlertSuccess.value = true;
+  }
+
+  /**
+   * Affichage de l'ordonnance existante
+   */
+  function displaySavedPrescription(medicinePrescription)
+  {
+    showSavedPrescription.value = true;
+    medicine.value = medicinePrescription;
+  }
+
+  /**
+   * Fermeture de l'ordonnance existante
+   */
+  function hidePrescription()
+  {
+    showSavedPrescription.value = false;
+  }
+
+  /**
+   * Reload de la page après suppression de l'ordonnance
+   */
+  function reloadAfterPrescriptionDeleted()
+  {
+    showSavedPrescription.value = false;
+    reload.value++;
+
+    msgSuccess.value = "L'ordonnance a bien été supprimée !";
+    showAlertSuccess.value = true;
+  }
 </script>
 
 <template>
@@ -130,8 +193,10 @@
         </div>
       </div>
       <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide" @showErrorAlert="showErrorAlert"></FormNewMedicine>
-      <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showDeleteMessage"></ArrayMedicine>
+      <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showDeleteMessage" @showPrescription="displayPrescription" @showSavedPrescription="displaySavedPrescription"></ArrayMedicine>
       <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideFormAndAutorizeEdit" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
+      <FormPrescription v-if="showPrescription" @goBack="closePrescription" @prescriptionSubmitted="reloadAfterPrescriptionAdded" :medicine="medicine"></FormPrescription>
+      <SavedPrescription v-if="showSavedPrescription" @closePrescription="hidePrescription" @prescriptionDeleted="reloadAfterPrescriptionDeleted" :medicine="medicine"></SavedPrescription>
       <div id="scroll-bottom"></div>
     </div>
   </main>
