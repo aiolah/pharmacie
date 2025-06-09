@@ -3,7 +3,7 @@
     import Medicine from "../Medicine.js";
 
     const listMedicine = ref([]);
-    const props = defineProps(["reload", "disabled", "searchItem"]);
+    const props = defineProps(["reload", "disabled", "searchItem", "disabledOrdo"]);
     const emit = defineEmits(["updateMedicine", 'showDeleteSuccessAlert', 'showPrescription', 'showSavedPrescription']);
 
     const url = "https://apipharmacie.pecatte.fr/api/13/medicaments";
@@ -189,8 +189,8 @@
                     <button type="button" class="btn btn-primary btn-sm" title="Augmenter la quantité" @click="addOneQuantity(index)">+ 1</button>
                     <button type="button" class="btn btn-info btn-sm" title="Réduire la quantité" @click="lessOneQuantity(index)">- 1</button>
                     <button type="button" class="btn btn-warning btn-sm" :title="'Modifier le médicament ' + medicine.denomination" @click="$emit('updateMedicine', medicine)" :disabled="props.disabled"><font-awesome-icon icon="pen-to-square" /></button>
-                    <button v-if="!medicine.ordo" type="button" class="btn btn-success btn-sm" title="Ajouter une ordonnance" @click="$emit('showPrescription', medicine)"><font-awesome-icon icon="file-medical" /></button>
-                    <button v-if="medicine.ordo" type="button" class="btn btn-light btn-sm" title="Consulter l'ordonnance" @click="$emit('showSavedPrescription', medicine)"><font-awesome-icon icon="tablets" /></button>
+                    <button v-if="!medicine.ordo" type="button" class="btn btn-success btn-sm" title="Ajouter une ordonnance" @click="$emit('showPrescription', medicine)" :disabled="props.disabledOrdo"><font-awesome-icon icon="file-medical" /></button>
+                    <button v-if="medicine.ordo" type="button" class="btn btn-light btn-sm" title="Consulter l'ordonnance" @click="$emit('showSavedPrescription', medicine)"  :disabled="props.disabledOrdo"><font-awesome-icon icon="tablets" /></button>
                     <button type="button" class="btn btn-danger btn-sm" :title="'Supprimer le médicament ' + medicine.denomination" @click="deleteMedicine(index)"><font-awesome-icon icon="trash"/></button>
                 </td>
             </tr>

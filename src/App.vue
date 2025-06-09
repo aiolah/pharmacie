@@ -25,6 +25,16 @@
   let showAlertError = ref(false);
   let showPrescription = ref(false);
   let showSavedPrescription = ref(false);
+  let disabledOrdo = ref(false);
+
+  function showAddForm()
+  {
+    seen.value = !seen.value;
+
+    hideUpdateFormNow();
+    hidePrescriptionNow();
+    hideSavedPrescriptionNow();
+  }
 
   /**
    * Après l'ajout d'un médicament, on recharge la liste des médicaments, on cache le formulaire et on réaffiche le bouton Ajouter
@@ -35,9 +45,8 @@
     seen.value = !seen.value;
     emptySearchBar.value = true;
 
-    msgSuccess.value = "Le médicament a été ajouté avec succès !";
-    showAlertSuccess.value = true;
-    showAlertError.value = false;
+    showSuccessAlert("Le médicament a été ajouté avec succès !");
+    hideErrorAlert();
   }
 
   /**
@@ -47,17 +56,11 @@
   function sendDataToForm(medicineToUpdate)
   {
     medicine.value = medicineToUpdate;
-    disabled.value = !disabled.value;
-    showUpdateForm.value = !showUpdateForm.value;
-  }
+    showUpdateFormNow();
+    hidePrescriptionNow();
+    hideSavedPrescriptionNow();
 
-  /**
-   * Bouton Annuler : on cache le formulaire et on ré autorise la modification
-   */
-  function hideFormAndAutorizeEdit()
-  {
-    showUpdateForm.value = !showUpdateForm.value;
-    disabled.value = !disabled.value;
+    seen.value = true;
   }
 
   /**
@@ -66,12 +69,10 @@
   function reloadAfterUpdate()
   {
     reload.value++;
-    disabled.value = false;
-    showUpdateForm.value = !showUpdateForm.value;
     emptySearchBar.value = true;
+    hideUpdateFormNow();
 
-    msgSuccess.value = "Le médicament a bien été modifié !";
-    showAlertSuccess.value = true;
+    showSuccessAlert("Le médicament a bien été modifié !");
   }
 
   /**
@@ -81,7 +82,7 @@
   function filterMedicine(searchItemInput)
   {
     searchItem.value = searchItemInput;
-    showAlertError.value = false;
+    hideErrorAlert();
   }
 
   /**
@@ -90,24 +91,7 @@
   function reloadAfterSearch()
   {
     reload.value++;
-    showAlertError.value = false;
-  }
-
-  /**
-   * Affichage d'une alerte après la suppression d'un médicament
-   */
-  function showDeleteMessage()
-  {
-    msgSuccess.value = "Le médicament a bien été supprimé !";
-    showAlertSuccess.value = true;
-  }
-
-  /**
-   * Fermeture d'une alerte de succès
-   */
-  function closeAlertSuccess()
-  {
-    showAlertSuccess.value = false;
+    hideErrorAlert();
   }
 
   /**
@@ -121,30 +105,17 @@
   }
 
   /**
-   * Fermeture de l'alerte d'erreur
-   */
-  function closeAlertError()
-  {
-    showAlertError.value = false;
-  }
-
-  /**
    * Affichage de l'ordonnance
    * @param medicinePrescription Médicament dont on veut afficher l'ordonnance
    */
   function displayPrescription(medicinePrescription)
   {
-    showPrescription.value = true;
-    showSavedPrescription.value = false;
-    medicine.value = medicinePrescription;
-  }
+    hideUpdateFormNow();
+    hideSavedPrescriptionNow();
+    showPrescriptionNow();
 
-  /**
-   * Fermeture de l'ordonnance
-   */
-  function closePrescription()
-  {
-    showPrescription.value = false;
+    seen.value = true;
+    medicine.value = medicinePrescription;
   }
 
   /**
@@ -152,11 +123,10 @@
    */
   function reloadAfterPrescriptionAdded()
   {
-    showPrescription.value = false;
+    hidePrescriptionNow();
     reload.value++;
 
-    msgSuccess.value = "L'ordonnance a bien été ajoutée !";
-    showAlertSuccess.value = true;
+    showSuccessAlert("L'ordonnance a bien été ajoutée !");
   }
 
   /**
@@ -164,17 +134,12 @@
    */
   function displaySavedPrescription(medicinePrescription)
   {
-    showSavedPrescription.value = true;
-    showPrescription.value = false;
-    medicine.value = medicinePrescription;
-  }
+    hideUpdateFormNow();
+    hidePrescriptionNow();
+    showSavedPrescriptionNow();
 
-  /**
-   * Fermeture de l'ordonnance existante
-   */
-  function hidePrescription()
-  {
-    showSavedPrescription.value = false;
+    seen.value = true;
+    medicine.value = medicinePrescription;
   }
 
   /**
@@ -182,11 +147,82 @@
    */
   function reloadAfterPrescriptionDeleted()
   {
-    showSavedPrescription.value = false;
+    hideSavedPrescriptionNow();
     reload.value++;
 
-    msgSuccess.value = "L'ordonnance a bien été supprimée !";
+    showSuccessAlert("L'ordonnance a bien été supprimée !");
+  }
+
+  /**
+   * Affiche l'alert de succès avec le message passé en paramètre
+   * @param msg Message à afficher
+   */
+  function showSuccessAlert(msg)
+  {
+    msgSuccess.value = msg;
     showAlertSuccess.value = true;
+  }
+
+  /**
+   * Affiche le formulaire de modification d'un médicament
+   */
+  function showUpdateFormNow()
+  {
+    showUpdateForm.value = true;
+    disabled.value = true;
+  }
+
+  /**
+   * Affiche le formulaire d'ajout d'une ordonannce
+   */
+  function showPrescriptionNow()
+  {
+    showPrescription.value = true;
+    disabledOrdo.value = true;
+  }
+
+  /**
+   * Affiche le formulaire de modification d'une ordonnance
+   */
+  function showSavedPrescriptionNow()
+  {
+    showSavedPrescription.value = true;
+    disabledOrdo.value = true;
+  }
+
+  /**
+   * Cache le formulaire de modification d'un médicament
+   */
+  function hideUpdateFormNow()
+  {
+    showUpdateForm.value = false;
+    disabled.value = false;
+  }
+
+  /**
+   * Cache le formulaire d'ajout d'une ordonnance
+   */
+  function hidePrescriptionNow()
+  {
+    showPrescription.value = false;
+    disabledOrdo.value = false;
+  }
+
+  /**
+   * Cache l'ordonnance
+   */
+  function hideSavedPrescriptionNow()
+  {
+    showSavedPrescription.value = false;
+    disabledOrdo.value = false;
+  }
+
+  /**
+   * Cache l'alert d'erreur
+   */
+  function hideErrorAlert()
+  {
+    showAlertError.value = false;
   }
 </script>
 
@@ -198,20 +234,20 @@
     <div class="container">
       <h1 class="text-center m-3">Ma Pharmacie</h1>
 
-      <AlertSuccess v-if="showAlertSuccess" :msg="msgSuccess" @closeAlert="closeAlertSuccess"></AlertSuccess>
-      <AlertError v-if="showAlertError" :msg="msgError" @closeAlert="closeAlertError"></AlertError>
+      <AlertSuccess v-if="showAlertSuccess" :msg="msgSuccess" @closeAlert="showAlertSuccess = false"></AlertSuccess>
+      <AlertError v-if="showAlertError" :msg="msgError" @closeAlert="showAlertError = false"></AlertError>
 
       <div class="d-flex justify-content-between">
-        <ButtonAddMedicine v-if="seen" @click="seen = !seen"></ButtonAddMedicine>
+        <ButtonAddMedicine v-if="seen" @click="showAddForm"></ButtonAddMedicine>
         <div class="col-3">
           <SearchBar :emptySearchBar="emptySearchBar" v-if="seen" @searchMedicine="filterMedicine" @reloadAfterSearch="reloadAfterSearch"></SearchBar>
         </div>
       </div>
       <FormNewMedicine v-if="!seen" @goBack="seen = !seen" @loadNewMedicine="loadAndHide" @showErrorAlert="showErrorAlert"></FormNewMedicine>
-      <ArrayMedicine :reload="reload" :disabled="disabled" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showDeleteMessage" @showPrescription="displayPrescription" @showSavedPrescription="displaySavedPrescription"></ArrayMedicine>
-      <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideFormAndAutorizeEdit" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
-      <FormPrescription v-if="showPrescription" @goBack="closePrescription" @prescriptionSubmitted="reloadAfterPrescriptionAdded" :medicine="medicine"></FormPrescription>
-      <SavedPrescription v-if="showSavedPrescription" @closePrescription="hidePrescription" @prescriptionDeleted="reloadAfterPrescriptionDeleted" :medicine="medicine"></SavedPrescription>
+      <ArrayMedicine :reload="reload" :disabled="disabled" :disabledOrdo="disabledOrdo" :searchItem="searchItem" @updateMedicine="sendDataToForm" @showDeleteSuccessAlert="showSuccessAlert('Le médicament a bien été supprimé !')" @showPrescription="displayPrescription" @showSavedPrescription="displaySavedPrescription"></ArrayMedicine>
+      <FormUpdateMedicine v-if="showUpdateForm" @goBack="hideUpdateFormNow" @reloadListMedicine="reloadAfterUpdate" :medicine="medicine"></FormUpdateMedicine>
+      <FormPrescription v-if="showPrescription" @goBack="hidePrescriptionNow" @prescriptionSubmitted="reloadAfterPrescriptionAdded" :medicine="medicine"></FormPrescription>
+      <SavedPrescription v-if="showSavedPrescription" @closePrescription="hideSavedPrescriptionNow" @prescriptionDeleted="reloadAfterPrescriptionDeleted" :medicine="medicine"></SavedPrescription>
       <div id="scroll-bottom"></div>
     </div>
   </main>
