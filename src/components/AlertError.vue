@@ -7,11 +7,6 @@
     watch(() => props.msg, (oldValue, newValue) => {
 
     });
-
-    function closeAlert()
-    {
-        emit('closeAlert');
-    }
 </script>
 
 <template>
@@ -19,6 +14,6 @@
         <font-awesome-icon icon="triangle-exclamation" />
         <!-- v-html="variable" permet d'interpréter les balises HTML -->
         &nbsp; <span v-html="msg"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="closeAlert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="$emit('closeAlert')"></button>
     </div>
 </template>
