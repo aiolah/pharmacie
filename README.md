@@ -14,7 +14,7 @@ Voici **comment utiliser l'application** :
 ## 1 - Ajouter un médicament
 Pour ajouter un médicament, cliquez sur le bouton "Ajouter un médicament" en haut à gauche. Vous pouvez maintenant remplir le formulaire. Les champs "Nom", "Forme" et "Quantité" sont obligatoires.
 Il y a plusieurs règles à respecter lors de l'ajout d'un médicament :
-- La quantité minimale est 1, une quantité négative est impossible
+- La quantité minimale est 1, une quantité négative n'est pas autorisée
 - Le nouveau médicament ne doit pas déjà exister dans la pharmacie. Si c'est le cas, une erreur s'affiche.
 
 Il est possible de renseigner une image grâce au champ fichier. Si aucun fichier n'est sélectionné, l'application affichera une image par défaut pour le nouveau médicament.
@@ -41,7 +41,7 @@ Cliquez sur "Enregistrer" pour lier l'ordonnance au médicament. Un message de c
 ## 7 - Consulter et supprimer une ordonnance
 Si une ordonnance existe pour un médicament, une icône comprimés s'affiche sur la ligne du médicament. Cliquez sur l'icône pour afficher l'ordonnance. Une fois l'ordonnance affichée, vous pouvez la supprimer en cliquant sur "Supprimer l'ordonnance". L'ordonnance sera supprimée mais pas le médicament.
 
-*A savoir :* Les ordonnances sont gérées avec le **localStorage**. Cela signifie qu'elles seront persistantes après consultation du site. Par contre, si le localStorage lié au site est supprimé, les ordonnances le seront aussi.
+*A savoir :* Les ordonnances sont gérées avec le **localStorage**. Cela signifie qu'elles seront persistantes après consultation du site mais sur votre device seulement. Par contre, si le localStorage lié au site est supprimé, les ordonnances le seront aussi.
 
 ## 8 - Supprimer un médicament
 
