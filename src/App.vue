@@ -95,7 +95,7 @@
 
   function showDeleteMessage()
   {
-    msg.value = "Le médicament a bien été supprimé !";
+    msgSuccess.value = "Le médicament a bien été supprimé !";
     showAlertSuccess.value = true;
   }
 
