@@ -135,6 +135,7 @@
   function displayPrescription(medicinePrescription)
   {
     showPrescription.value = true;
+    showSavedPrescription.value = false;
     medicine.value = medicinePrescription;
   }
 
@@ -164,6 +165,7 @@
   function displaySavedPrescription(medicinePrescription)
   {
     showSavedPrescription.value = true;
+    showPrescription.value = false;
     medicine.value = medicinePrescription;
   }
 
